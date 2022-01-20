@@ -30,9 +30,9 @@ public class Room implements Serializable {
     @Id
     private String id;
 
-    private Integer memer1Id;
+    private String memer1Id;
 
-    private Integer member2Id;
+    private String member2Id;
 
     private Date createTime;
 

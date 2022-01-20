@@ -4,6 +4,8 @@ package com.bezkoder.spring.jwt.mongodb.repository;
 import com.bezkoder.spring.jwt.mongodb.models.entity.Room;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -12,6 +14,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @author leonliu
  * @since 2022-01-16
  */
-public interface RoomMapper extends MongoRepository<Room,String> {
-
+public interface RoomRepository extends MongoRepository<Room,String> {
+    List<Room> findByMemer1Id(String memer1Id);
 }
