@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.bezkoder</groupId>
 	<artifactId>spring-boot-security-jwt-mongodb</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>spring-boot-security-jwt-mongodb</name>
 	<description>Demo project for Spring Boot Auth with Spring Security,
 		JWT, MongoDB</description>
