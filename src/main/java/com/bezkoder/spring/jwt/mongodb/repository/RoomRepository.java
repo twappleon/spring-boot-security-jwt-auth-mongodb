@@ -16,4 +16,6 @@ import java.util.List;
  */
 public interface RoomRepository extends MongoRepository<Room,String> {
     List<Room> findByMemer1Id(String memer1Id);
+
+    List<Room> findByMemer1IdAndMember2Id(String memer1Id,String member2Id);
 }

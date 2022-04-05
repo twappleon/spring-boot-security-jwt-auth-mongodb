@@ -86,6 +86,7 @@ public enum StatusEnum {
     ROOM_APPLY_FAIL(1409,"申請加群失敗"),
     ROOM_UPDATE_FAIL(1410,"更新房間失敗"),
     ROOM_NOT_EXIST(1411,"房間不存在"),
+    ROOM_EXIST(1412,"房間己存在"),
     /**Blacklist**/
     BLACKLIST_ROOM_NOT_EXIST(1601,"房間不存在"),
     BLACKLIST_NOT_ADMIN(1602,"非管理者"),

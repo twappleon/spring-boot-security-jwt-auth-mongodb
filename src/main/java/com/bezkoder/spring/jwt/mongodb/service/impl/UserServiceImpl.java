@@ -44,4 +44,19 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(optional.get(),userResponse);
         return userResponse;
     }
+
+    @Override
+    public UserResponse save(User user) {
+        Optional<User> optional = userRepository.findByUsername(user.getUsername());
+        if(optional.isPresent()){
+            throw  new BusinessLogicException(StatusEnum.USER_EXIST.getValue(),StatusEnum.USER_EXIST.getInfo(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        User entity = new User();
+        BeanUtils.copyProperties(user,entity);
+        userRepository.save(entity);
+
+        UserResponse userResponse = new UserResponse();
+        BeanUtils.copyProperties(entity,userResponse);
+        return userResponse;
+    }
 }

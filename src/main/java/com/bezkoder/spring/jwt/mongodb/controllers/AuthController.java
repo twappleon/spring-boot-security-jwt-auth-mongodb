@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.bezkoder.spring.jwt.mongodb.enumration.StatusEnum;
+import com.bezkoder.spring.jwt.mongodb.models.RespData;
+import com.bezkoder.spring.jwt.mongodb.payload.response.UserResponse;
+import com.bezkoder.spring.jwt.mongodb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,13 +50,16 @@ public class AuthController {
 	RoleRepository roleRepository;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	PasswordEncoder encoder;
 
 	@Autowired
 	JwtUtils jwtUtils;
 
 	@PostMapping("/login")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public RespData<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -65,20 +72,20 @@ public class AuthController {
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 roles));
+		return new RespData<JwtResponse>(StatusEnum.SUCCESS.getValue(),StatusEnum.SUCCESS.getInfo(),new JwtResponse(jwt,
+				userDetails.getId(),
+				userDetails.getUsername(),
+				userDetails.getEmail(),
+				roles));
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Username is already taken!"));
-		}
+	public RespData<UserResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+		//if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+		//	return ResponseEntity
+		//			.badRequest()
+		//			.body(new MessageResponse("Error: Username is already taken!"));
+		//}
 
 		/*if (userRepository.existsByEmail(signUpRequest.getEmail())) {
 			return ResponseEntity
@@ -122,8 +129,10 @@ public class AuthController {
 		}
 
 		user.setRoles(roles);
-		userRepository.save(user);
 
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return new RespData<UserResponse>(StatusEnum.SUCCESS.getValue(),StatusEnum.SUCCESS.getInfo(),userService.save(user));
+
+
+		//return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 }

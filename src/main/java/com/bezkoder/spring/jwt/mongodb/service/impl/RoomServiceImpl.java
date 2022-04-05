@@ -1,6 +1,8 @@
 package com.bezkoder.spring.jwt.mongodb.service.impl;
 
 
+import com.bezkoder.spring.jwt.mongodb.enumration.StatusEnum;
+import com.bezkoder.spring.jwt.mongodb.exceptiopn.BusinessLogicException;
 import com.bezkoder.spring.jwt.mongodb.models.dto.RoomAddDTO;
 import com.bezkoder.spring.jwt.mongodb.models.dto.RoomSearchDTO;
 import com.bezkoder.spring.jwt.mongodb.models.entity.Room;
@@ -10,6 +12,7 @@ import com.bezkoder.spring.jwt.mongodb.service.RoomService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,12 +47,18 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomListVO add(RoomAddDTO roomAddDTO) {
-        Room room = new Room();
-        BeanUtils.copyProperties(roomAddDTO,room);
-        room.setCreateTime(new Date());
-        Room r = roomRepository.save(room);
-        RoomListVO vo = new RoomListVO();
-        BeanUtils.copyProperties(r,vo);
-        return vo;
+        List<Room> list =  roomRepository.findByMemer1IdAndMember2Id(roomAddDTO.getMemer1Id(),roomAddDTO.getMember2Id());
+        log.info("list:{}",list.size());
+        if(list.size() == 0) {
+            Room room = new Room();
+            BeanUtils.copyProperties(roomAddDTO, room);
+            room.setCreateTime(new Date());
+            Room r = roomRepository.save(room);
+            RoomListVO vo = new RoomListVO();
+            BeanUtils.copyProperties(r, vo);
+            return vo;
+        } else {
+            throw  new BusinessLogicException(StatusEnum.ROOM_EXIST.getValue(),StatusEnum.ROOM_EXIST.getInfo(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
